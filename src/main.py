@@ -1,5 +1,5 @@
 from flask import Flask, jsonify
-from routes.api import process_api
+from src.routes.api import process_api
 
 
 app = Flask(__name__)
