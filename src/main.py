@@ -1,10 +1,11 @@
 from flask import Flask, jsonify, render_template
+from flask_cors import CORS
 from src.routes.api import process_api
 
 
 app = Flask(__name__,template_folder="../templates")
-
-
+CORS(app)
+# CORS(app, resources={r"/*": {"origins": ["http://localhost:3000", "https://mojadomena.sk"]}})
 app.register_blueprint(process_api,url_prefix='/api')
 
 @app.route("/")
