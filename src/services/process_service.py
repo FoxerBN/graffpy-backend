@@ -27,7 +27,7 @@ def get_system_stats():
 
     # Internet speed
     net1 = psutil.net_io_counters()
-    time.sleep(1)
+    time.sleep(2)
     net2 = psutil.net_io_counters()
 
     download_speed = (net2.bytes_recv - net1.bytes_recv) / 1024  # KB/s
@@ -35,8 +35,8 @@ def get_system_stats():
 
     return {
         "cpu": f"{cpu_percent}%",
-        "ram": f"{ram_used_gb:.1f}/{ram_total_gb:.1f} GB ({ram_percent}%)",
-        "disk": f"{disk_free_gb:.1f}/{disk_total_gb:.1f} GB free",
+        "ram": f"{ram_percent}%,{ram_used_gb:.1f}/{ram_total_gb:.1f} GB",
+        "disk": f"{disk_free_gb:.1f}/{disk_total_gb:.1f}",
         "cpu_temp": f"{cpu_temp:.1f}°C" if cpu_temp is not None else "N/A",
         "net": f"↓ {download_speed:.1f} KB/s ↑ {upload_speed:.1f} KB/s"
     }
