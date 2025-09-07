@@ -1,5 +1,6 @@
 import psutil
 import time
+from src.config.tinydb_config import db, daily_data_table
 
 def get_system_stats():
     # CPU %
@@ -32,6 +33,17 @@ def get_system_stats():
 
     download_speed = (net2.bytes_recv - net1.bytes_recv) / 1024  # KB/s
     upload_speed = (net2.bytes_sent - net1.bytes_sent) / 1024    # KB/s
+
+    # Store daily data
+    data_entry = {
+        "cpu_percent": round(cpu_percent, 1),
+        "ram_percent": round(ram_percent, 1),
+        "cpu_temp": round(cpu_temp, 1) if cpu_temp is not None else None,
+        "download_speed_kbs": round(download_speed, 1),
+        "upload_speed_kbs": round(upload_speed, 1)
+    }
+
+    daily_data_table.insert(data_entry)
 
     return {
         "cpu": f"{cpu_percent}%",

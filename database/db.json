@@ -1,0 +1,11 @@
+{
+  "daily_data": {
+    "1": {
+      "cpu_percent": 10.3,
+      "ram_percent": 53.9,
+      "cpu_temp": 45.0,
+      "download_speed_kbs": 0.3,
+      "upload_speed_kbs": 0.2
+    }
+  }
+}
