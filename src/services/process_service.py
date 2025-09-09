@@ -1,6 +1,8 @@
 import psutil
 import time
-from src.config.tinydb_config import db, daily_data_table
+import random
+from src.config.tinydb_config import daily_data_table
+from tinydb import Query
 
 def get_system_stats():
     # CPU %
@@ -34,8 +36,11 @@ def get_system_stats():
     download_speed = (net2.bytes_recv - net1.bytes_recv) / 1024  # KB/s
     upload_speed = (net2.bytes_sent - net1.bytes_sent) / 1024    # KB/s
 
-    # Store daily data
+    # Store daily data with unique identifier
+    current_time = time.time()
     data_entry = {
+        "timestamp": current_time,
+        "unique_id": f"{current_time}_{random.randint(1000, 9999)}",  # Ensure uniqueness
         "cpu_percent": round(cpu_percent, 1),
         "ram_percent": round(ram_percent, 1),
         "cpu_temp": round(cpu_temp, 1) if cpu_temp is not None else None,
@@ -43,7 +48,17 @@ def get_system_stats():
         "upload_speed_kbs": round(upload_speed, 1)
     }
 
-    daily_data_table.insert(data_entry)
+    try:
+        # Use upsert to avoid duplicate ID issues
+        Query_obj = Query()
+        daily_data_table.upsert(data_entry, Query_obj.unique_id == data_entry["unique_id"])
+    except Exception as e:
+        print(f"Warning: Failed to store data in database: {e}")
+        # Try simple insert as fallback
+        try:
+            daily_data_table.insert(data_entry)
+        except Exception as e2:
+            print(f"Warning: Fallback insert also failed: {e2}")
 
     return {
         "cpu": f"{cpu_percent}%",

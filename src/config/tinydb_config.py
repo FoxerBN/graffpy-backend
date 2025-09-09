@@ -7,7 +7,9 @@ if not os.path.exists(db_dir):
 
 # Correct path to database folder
 db = TinyDB('database/db.json')
+weekly_db = TinyDB('database/weekly_stats.json')
+
 daily_data_table = db.table('daily_data')
-weekly_stats_table = db.table('weekly_stats')
+weekly_stats_table = weekly_db.table('weekly_stats')
 
 Query = Query
