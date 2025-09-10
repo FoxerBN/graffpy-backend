@@ -1,5 +1,5 @@
 import time
-from src.config.tinydb_config import db, weekly_stats_table,daily_data_table, Query
+from src.config.tinydb_config import db, weekly_stats_table, daily_data_table, Query
 
 
 def generate_weekly_stats():
@@ -13,6 +13,7 @@ def generate_weekly_stats():
         cpu_temps = [entry['cpu_temp'] for entry in all_daily_data if entry['cpu_temp'] is not None]
         cpu_percents = [entry['cpu_percent'] for entry in all_daily_data]
         ram_percents = [entry['ram_percent'] for entry in all_daily_data]
+        last_entry = all_daily_data[-1] if all_daily_data else {}
 
         stats = {
             "maxCpuTemp": str(max(cpu_temps)) if cpu_temps else "N/A",
@@ -23,7 +24,9 @@ def generate_weekly_stats():
             "minCpuPercent": str(min(cpu_percents)),
             "maxRamPercent": str(max(ram_percents)),
             "avgRamPercent": str(round(sum(ram_percents) / len(ram_percents), 1)),
-            "minRamPercent": str(min(ram_percents))
+            "minRamPercent": str(min(ram_percents)),
+            "freeSpace": str(last_entry.get("disk_free_gb", "N/A")),
+            "totalSpace": str(last_entry.get("disk_total_gb", "N/A"))
         }
 
         weekly_stats_table.insert(stats)
